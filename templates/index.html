@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Trending Topics - Manas Bavaskar</title>
+    <style>
+        :root {
+            --primary-color: #db4a2c;
+            --primary-hover: #c13d22;
+            --dark-color: #2d2d2d;
+            --light-color: #fdf6f5;
+            --accent-color: #f4a896;
+            --border-color: #e6d5d2;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .assignment-info {
+            text-align: center;
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assignment-info p {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .assignment-info .name {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .resume-link {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .resume-link:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(219, 74, 44, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .assignment-info {
+                align-items: center;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 2.5rem;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(219, 74, 44, 0.1);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(219, 74, 44, 0.1);
+        }
+
+        h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .run-button {
+            display: block;
+            padding: 14px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin: 20px auto;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(219, 74, 44, 0.2);
+        }
+
+        .run-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(219, 74, 44, 0.3);
+        }
+        
+        #output {
+            margin-top: 30px;
+            background-color: var(--light-color);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        #output ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #output li {
+            padding: 15px 20px;
+            margin: 8px 0;
+            background-color: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        #output li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-size: 1.5em;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #output li:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(219, 74, 44, 0.1);
+        }
+
+        .link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .run-button {
+                padding: 12px 24px;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .assignment-info {
+                text-align: center;
+            }
+
+            .logo {
+                width: 100px;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        .json-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light-color);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .json-display {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid var(--border-color);
+            margin: 10px 0;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .download-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(219, 74, 44, 0.2);
+        }
+
+        .download-all-button {
+            background-color: var(--primary-color);
+            margin: 0;
+        }
+
+        .download-all-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(219, 74, 44, 0.3);
+        }
+    </style>
+    <script>
+        async function runScript() {
+            const button = document.querySelector('button');
+            const output = document.getElementById('output');
+            
+            try {
+                button.classList.add('loading');
+                button.disabled = true;
+                output.textContent = 'Loading...';
+                
+                const response = await fetch("/run_script");
+                if (!response.ok) throw new Error('Network response was not ok');
+                const result = await response.json();
+                
+                if (result.error) {
+                    output.innerText = `Error: ${result.error}`;
+                } else {
+                    output.innerHTML = 
+                        `<p>These are the most happening topics as of ${result.date_time}:</p>
+                        <ul>
+                            <li>${result.trend1}</li>
+                            <li>${result.trend2}</li>
+                            <li>${result.trend3}</li>
+                            <li>${result.trend4}</li>
+                            <li>${result.trend5}</li>
+                        </ul>
+                        <p>IP address: ${result.ip_address}</p>
+                        <div class="json-section">
+                            <h3>JSON Data</h3>
+                            <pre class="json-display">${JSON.stringify([{
+                                "_id": result._id,
+                                "trend1": result.trend1,
+                                "trend2": result.trend2,
+                                "trend3": result.trend3,
+                                "trend4": result.trend4,
+                                "trend5": result.trend5,
+                                "date_time": result.date_time,
+                                "ip_address": result.ip_address
+                            }], null, 2)}</pre>
+                            <button onclick="downloadJSON()" class="download-button">Download JSON</button>
+                        </div>`;
+                }
+            } catch (error) {
+                output.innerText = `Error: ${error.message}`;
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        function downloadJSON() {
+            const output = document.getElementById('output');
+            const jsonData = output.querySelector('.json-display').textContent;
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'twitter_trends.json';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="assignment-info">
+                <p class="name">Manas Bavaskar</p>
+                <a href="https://drive.google.com/file/d/1nBNnO7vvN8n12QBjf12XfEBBbjB2LMZy/view?usp=sharing" 
+                   target="_blank" 
+                   class="resume-link">View My Resume</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Twitter Trending Topics</h1>
+        
+        <div class="button-container">
+            <button onclick="runScript()" class="run-button">Get Trending Topics</button>
+            <a href="/download_data" class="run-button download-all-button">Download All Data (JSON)</a>
+        </div>
+
+        <div id="output"></div>
+
+        <div class="link">
+            <p>Connect with me on <a href="https://www.linkedin.com/in/manas-bavaskar/" target="_blank">LinkedIn</a></p>
+        </div>
+    </div>
+</body>
+</html>
